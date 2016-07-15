@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import datetime
 
 from django.core.urlresolvers import reverse
+from django.core.validators import RegexValidator
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
@@ -10,6 +11,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 
 from symposion.markdown_parser import parse
+from .enum import COUTRIES, STATES, PROVINCES
 
 
 @python_2_unicode_compatible
@@ -35,6 +37,11 @@ class Speaker(models.Model):
         blank=True,
         help_text=_(u"Your Twitter account")
     )
+    github_username = models.CharField(
+        max_length=15,
+        blank=True,
+        help_text=_(u"Your GitHub account")
+    )
     annotation = models.TextField(verbose_name=_("Annotation"))  # staff only
     invite_email = models.CharField(max_length=200, unique=True, null=True, db_index=True, verbose_name=_("Invite_email"))
     invite_token = models.CharField(max_length=40, db_index=True, verbose_name=_("Invite token"))
@@ -43,6 +50,31 @@ class Speaker(models.Model):
         editable=False,
         verbose_name=_("Created")
     )
+
+    country = models.CharField(_("Country"),
+                               max_length=255,
+                               default='CA',
+                               choices=COUTRIES)
+
+    NA = 'NILL'
+    REGIONS = PROVINCES + STATES + ((NA, 'Not Applicable'),)
+    region = models.CharField(_("Province/State"),
+                              max_length=255,
+                              choices=REGIONS)
+    city = models.CharField(_("City"),
+                            max_length=255,
+                            default='',
+                            blank=True)
+
+    PHONE_REGEX = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: "
+                                                                   "'+999999999'. Up to 15 digits allowed.")
+    phone_number = models.CharField(_("Phone number"),
+                                    max_length=255,
+                                    validators=[PHONE_REGEX])
+    secondary_contact = models.CharField(_("Secondary contact"),
+                                         max_length=1024,
+                                         null=True,
+                                         blank=True)
 
     class Meta:
         ordering = ['name']
