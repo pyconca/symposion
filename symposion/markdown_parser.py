@@ -1,12 +1,13 @@
 from __future__ import unicode_literals
 
 import markdown
+import bleach
 
 
 def parse(text):
 
     # First run through the Markdown parser
-    text = markdown.markdown(text, extensions=["extra"], safe_mode=False)
+    text = markdown.markdown(bleach.clean(text), extensions=["extra"], safe_mode=False)
 
     # Sanitize using html5lib
     # bits = []
