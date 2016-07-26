@@ -66,11 +66,8 @@ class Speaker(models.Model):
                             default='',
                             blank=True)
 
-    PHONE_REGEX = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: "
-                                                                   "'+999999999'. Up to 15 digits allowed.")
     phone_number = models.CharField(_("Phone number"),
-                                    max_length=255,
-                                    validators=[PHONE_REGEX])
+                                    max_length=40)
     secondary_contact = models.CharField(_("Secondary contact"),
                                          max_length=1024,
                                          null=True,
