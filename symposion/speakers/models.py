@@ -26,10 +26,7 @@ class Speaker(models.Model):
     name = models.CharField(verbose_name=_("Name"), max_length=100,
                             help_text=_("As you would like it to appear in the"
                                         " conference program."))
-    biography = models.TextField(blank=True, help_text=_("A little bit about you.  Edit using "
-                                                         "<a href='http://warpedvisions.org/projects/"
-                                                         "markdown-cheat-sheet/target='_blank'>"
-                                                         "Markdown</a>."), verbose_name=_("Biography"))
+    biography = models.TextField(blank=True, help_text=_("A little bit about you.  Edit using <a href='http://daringfireball.net/projects/markdown/basics' target='_blank'>Markdown</a>."), verbose_name=_("Biography"))
     biography_html = models.TextField(blank=True)
     photo = models.ImageField(upload_to="speaker_photos", blank=True, verbose_name=_("Photo"))
     twitter_username = models.CharField(
@@ -66,11 +63,10 @@ class Speaker(models.Model):
                             default='',
                             blank=True)
 
-    PHONE_REGEX = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: "
-                                                                   "'+999999999'. Up to 15 digits allowed.")
+    PHONE_REGEX = RegexValidator(regex=r'^[\p{P}\W\d]*$', message="Only letters, whitespace, and punctuation allowed")
+
     phone_number = models.CharField(_("Phone number"),
-                                    max_length=255,
-                                    validators=[PHONE_REGEX])
+                                    max_length=40)
     secondary_contact = models.CharField(_("Secondary contact"),
                                          max_length=1024,
                                          null=True,
