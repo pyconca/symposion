@@ -66,6 +66,8 @@ class Speaker(models.Model):
                             default='',
                             blank=True)
 
+    PHONE_REGEX = RegexValidator(regex=r'^[\p{P}\W\d]*$')
+
     phone_number = models.CharField(_("Phone number"),
                                     max_length=40)
     secondary_contact = models.CharField(_("Secondary contact"),
