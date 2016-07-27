@@ -37,7 +37,7 @@ def speaker_create(request):
                 speaker.invite_email = None
             speaker.save()
             messages.success(request, _("Speaker profile created."))
-            return redirect("dashboard")
+            return redirect("proposal_submit_kind", 'talk')
     else:
         form = SpeakerForm(initial={"name": request.user.get_full_name()})
     return render(request, "symposion/speakers/speaker_create.html", {
