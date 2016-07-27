@@ -226,4 +226,4 @@ class SupportingDocument(models.Model):
 
     def download_url(self):
         return reverse("proposal_document_download",
-                       args=[os.path.basename(self.file.name).lower()])
+                       args=[self.pk, os.path.basename(self.file.name).lower()])
