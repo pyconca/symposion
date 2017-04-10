@@ -4,8 +4,7 @@ from django.http import HttpResponseBadRequest, HttpResponseNotAllowed
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template import Context, Template
 from django.views.decorators.http import require_POST
-
-from account.decorators import login_required
+from django.contrib.auth.decorators import login_required
 
 # @@@ switch to pinax-teams
 from symposion.teams.models import Team

@@ -5,8 +5,9 @@ import datetime
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
 
-from django.contrib.auth.models import Permission, User
+from django.contrib.auth.models import Permission
 
 from reversion import revisions as reversion
 
@@ -81,7 +82,7 @@ MEMBERSHIP_STATE_CHOICES = [
 
 class Membership(models.Model):
 
-    user = models.ForeignKey(User, related_name="memberships",
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="memberships",
                              verbose_name=_("User"))
     team = models.ForeignKey(Team, related_name="memberships",
                              verbose_name=_("Team"))

@@ -13,11 +13,9 @@ from django.views import static
 
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
 from django.utils.translation import ugettext_lazy as _
-
-from account.decorators import login_required
-from account.models import EmailAddress
 
 from symposion.proposals.models import (
     ProposalBase, ProposalSection, ProposalKind
@@ -137,7 +135,7 @@ def proposal_speaker_manage(request, pk):
                 return pending, token
             email_address = add_speaker_form.cleaned_data["email"]
             # check if email is on the site now
-            users = EmailAddress.objects.get_users_for(email_address)
+            users = User.objects.filter(email=email_address)
             if users:
                 # should only be one since we enforce unique email
                 user = users[0]
