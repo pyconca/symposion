@@ -5,9 +5,11 @@ from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
 from symposion.teams.models import Membership
+
+User = get_user_model()
 
 
 class TeamInvitationForm(forms.Form):
