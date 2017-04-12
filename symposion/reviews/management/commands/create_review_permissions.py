@@ -10,9 +10,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         ct, created = ContentType.objects.get_or_create(
-            model="",
+            model="reviews",
             app_label="reviews",
-            defaults={"name": "reviews"}
         )
 
         for ps in ProposalSection.objects.all():
@@ -22,4 +21,4 @@ class Command(BaseCommand):
                     content_type__pk=ct.id,
                     defaults={"name": "Can %s %s" % (action, ps), "content_type": ct}
                 )
-                print perm
+                print(perm)
