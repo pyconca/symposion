@@ -7,8 +7,7 @@ from django.core.validators import RegexValidator
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
-
-from django.contrib.auth.models import User
+from django.conf import settings
 
 from symposion.markdown_parser import parse
 from .enum import COUTRIES, STATES, PROVINCES
@@ -22,7 +21,7 @@ class Speaker(models.Model):
         (2, "Two")
     ]
 
-    user = models.OneToOneField(User, null=True, related_name="speaker_profile", verbose_name=_("User"))
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, null=True, related_name="speaker_profile", verbose_name=_("User"))
     name = models.CharField(verbose_name=_("Name"), max_length=100,
                             help_text=_("As you would like it to appear in the"
                                         " conference program."))

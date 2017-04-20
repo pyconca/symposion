@@ -1,12 +1,17 @@
 from __future__ import unicode_literals
+import pytz
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import python_2_unicode_compatible
-
-from timezone_field import TimeZoneField
+from django.conf import settings
 
 
 CONFERENCE_CACHE = {}
+
+
+def default_timezone():
+    return getattr(settings, 'TIME_ZONE', 'America/Toronto')
+
 
 
 @python_2_unicode_compatible
@@ -22,7 +27,9 @@ class Conference(models.Model):
     end_date = models.DateField(_("End date"), null=True, blank=True)
 
     # timezone the conference is in
-    timezone = TimeZoneField(blank=True, verbose_name=_("timezone"))
+    TIMEZONE_CHOICES = ((x, x) for x in pytz.all_timezones)
+    timezone = models.CharField(blank=True, choices=TIMEZONE_CHOICES, default=default_timezone,
+                                verbose_name=_("timezone"), max_length=64)
 
     def __str__(self):
         return self.title

@@ -10,8 +10,6 @@ from django.db.models.signals import post_init, post_save
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
-from django.contrib.auth.models import User
-
 from symposion.conference.models import Conference
 from symposion.sponsorship.managers import SponsorManager
 
@@ -69,7 +67,7 @@ class SponsorLevel(models.Model):
 @python_2_unicode_compatible
 class Sponsor(models.Model):
 
-    applicant = models.ForeignKey(User, related_name="sponsorships", verbose_name=_("Applicant"),
+    applicant = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="sponsorships", verbose_name=_("Applicant"),
                                   null=True)
 
     name = models.CharField(_("Sponsor Name"), max_length=100)

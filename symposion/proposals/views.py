@@ -12,12 +12,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import static
 
 from django.contrib import messages
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
 
 from django.utils.translation import ugettext_lazy as _
-
-from account.decorators import login_required
-from account.models import EmailAddress
 
 from symposion.proposals.models import (
     ProposalBase, ProposalSection, ProposalKind
@@ -29,6 +27,8 @@ from symposion.utils.mail import send_email
 from symposion.proposals.forms import (
     AddSpeakerForm, SupportingDocumentCreateForm
 )
+
+User = get_user_model()
 
 
 def get_form(name):
@@ -126,18 +126,18 @@ def proposal_speaker_manage(request, pk):
                         Q(user=None, invite_email=email_address)
                     )
                 except Speaker.DoesNotExist:
-                    salt = hashlib.sha1(str(random.random())).hexdigest()[:5]
-                    token = hashlib.sha1(salt + email_address).hexdigest()
+                    salt = hashlib.sha1(str(random.random()).encode()).hexdigest()[:5]
+                    token = hashlib.sha1(bytes(salt, 'utf-8') + bytes(email_address, 'utf-8')).hexdigest()
                     pending = Speaker.objects.create(
                         invite_email=email_address,
-                        invite_token=token,
+                        invite_token=str(token),
                     )
                 else:
                     token = pending.invite_token
                 return pending, token
             email_address = add_speaker_form.cleaned_data["email"]
             # check if email is on the site now
-            users = EmailAddress.objects.get_users_for(email_address)
+            users = User.objects.filter(email=email_address)
             if users:
                 # should only be one since we enforce unique email
                 user = users[0]

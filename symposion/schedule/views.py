@@ -1,20 +1,21 @@
 from __future__ import unicode_literals
 import json
 
+from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import Http404, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template import loader, Context
 
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.contrib.sites.models import Site
-
-from account.decorators import login_required
 
 from symposion.schedule.forms import SlotEditForm, ScheduleSectionForm
 from symposion.schedule.models import Schedule, Day, Slot, Presentation, Session, SessionRole
 from symposion.schedule.timetable import TimeTable
+
+User = get_user_model()
 
 
 def fetch_schedule(slug):
